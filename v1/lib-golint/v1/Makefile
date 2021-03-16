@@ -12,3 +12,5 @@ artifacts/lint/golint: $(GOLINT)
 	$(GOLINT) -set_exit_status ./...
 
 lint:: artifacts/lint/golint
+
+tools:: $(GOLINT)

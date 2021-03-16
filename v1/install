@@ -7,7 +7,7 @@ export MF_PROJECT_ROOT="${MF_PROJECT_ROOT:-$(pwd)}"
 # Check if we've already got the na4ma4 core library.
 if [[ ! -d ".makefiles/ext/na4ma4/lib/cache" ]]; then
     tmpdir="$(mktemp -d)"
-    trap "rm -rf '$tmpdir'" EXIT
+    trap "rm -rf '${tmpdir}'" EXIT
 
     # Download the na4ma4 core library.
     curl \
@@ -16,18 +16,14 @@ if [[ ! -d ".makefiles/ext/na4ma4/lib/cache" ]]; then
         --show-error \
         --location \
         --create-dirs \
-        --output "$tmpdir/main.zip" \
+        --output "${tmpdir}/main.zip" \
         "https://github.com/na4ma4/makefiles-ext/archive/main.zip"
 
     # Unpack the library into the .makefiles directory.
-    unzip -q "$tmpdir/main.zip" -d "$tmpdir"
-    mv "$tmpdir/main.zip" "$tmpdir/makefiles-ext-main/v1/main.zip"
+    unzip -q "${tmpdir}/main.zip" -d "${tmpdir}"
+    mv "${tmpdir}/main.zip" "${tmpdir}/makefiles-ext-main/v1/main.zip"
     mkdir -p ".makefiles/ext/na4ma4/lib/cache"
-    cp -r "$tmpdir/makefiles-ext-main/v1/" ".makefiles/ext/na4ma4/lib/cache/"
-
-    # Run the install command for the na4ma4 core library. Because it is already in
-    # the correct location this will simply run the install hooks.
-    # .makefiles/ext/na4ma4/lib/core/bin/na4ma4-install-lib core
+    cp -r "${tmpdir}/makefiles-ext-main/v1/" ".makefiles/ext/na4ma4/lib/cache/"
 fi
 
 if [[ ! -d ".makefiles/ext/na4ma4/lib/core" ]]; then
@@ -36,4 +32,4 @@ fi
 
 # # Finally, invoke the build-resource command to produce the actual resource that
 # # was requested.
-.makefiles/ext/na4ma4/lib/core/bin/na4ma4-build-resource "$1"
+.makefiles/ext/na4ma4/lib/core/bin/na4ma4-build-resource "${1}"

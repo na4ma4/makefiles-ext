@@ -9,3 +9,5 @@ artifacts/lint/golangci-lint: $(GOLANGCILINT)
 	$(GOLANGCILINT) run --enable-all --disable 'exhaustivestruct,interfacer,maligned,paralleltest' ./...
 
 lint:: artifacts/lint/golangci-lint
+
+tools:: $(GOLANGCILINT)

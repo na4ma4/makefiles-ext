@@ -12,3 +12,5 @@ artifacts/lint/misspell: $(MISSPELL)
 	$(MISSPELL) -w -error -locale UK ./...
 
 lint:: artifacts/lint/misspell
+
+tools:: $(MISSPELL)

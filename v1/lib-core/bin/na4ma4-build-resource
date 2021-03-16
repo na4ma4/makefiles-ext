@@ -9,7 +9,7 @@ if [[ $# < 1 ]]; then
     exit 1
 fi
 
-target="$1"
+target="${1}"
 
 if [ -e "${target}" ]; then
     exit 0

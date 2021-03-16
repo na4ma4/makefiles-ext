@@ -16,3 +16,5 @@ artifacts/lint/staticcheck: $(STATICCHECK)
 	$(STATICCHECK) -fail "all,-U1001" ./...
 
 lint:: artifacts/lint/staticcheck
+
+tools:: $(STATICCHECK)

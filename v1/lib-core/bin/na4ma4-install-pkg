@@ -11,8 +11,8 @@ if [[ $# < 2 ]]; then
     exit 1
 fi
 
-name="$1"
-version="$2"
+name="${1}"
+version="${2}"
 
 target="${NA4MA4_MF_ROOT}/pkg/${name}/v${version}"
 
