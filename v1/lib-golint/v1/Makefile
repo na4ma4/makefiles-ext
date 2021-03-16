@@ -8,7 +8,7 @@ $(GOLINT):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go get $(_MODFILEARG) golang.org/x/lint/golint
 
-artifacts/lint/golint: $(GOLINT)
+artifacts/lint/golint: $(GOLINT) $(GO_SOURCE_FILES)
 	$(GOLINT) -set_exit_status ./...
 
 lint:: artifacts/lint/golint

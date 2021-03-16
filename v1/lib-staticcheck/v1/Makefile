@@ -12,7 +12,7 @@ artifacts/cover/staticheck/unused-graph.txt: $(STATICCHECK) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(STATICCHECK) -debug.unused-graph "$(@)" ./...
 
-artifacts/lint/staticcheck: $(STATICCHECK)
+artifacts/lint/staticcheck: $(STATICCHECK) $(GO_SOURCE_FILES)
 	$(STATICCHECK) -fail "all,-U1001" ./...
 
 lint:: artifacts/lint/staticcheck
