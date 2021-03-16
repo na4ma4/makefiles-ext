@@ -23,11 +23,12 @@ if [[ ! -d ".makefiles/ext/na4ma4/lib/cache" ]]; then
     unzip -q "${tmpdir}/main.zip" -d "${tmpdir}"
     mv "${tmpdir}/main.zip" "${tmpdir}/makefiles-ext-main/v1/main.zip"
     mkdir -p ".makefiles/ext/na4ma4/lib/cache"
-    cp -r "${tmpdir}/makefiles-ext-main/v1/" ".makefiles/ext/na4ma4/lib/cache/"
+    cp -r "${tmpdir}/makefiles-ext-main/v1"/* ".makefiles/ext/na4ma4/lib/cache/"
 fi
 
 if [[ ! -d ".makefiles/ext/na4ma4/lib/core" ]]; then
-    cp -r ".makefiles/ext/na4ma4/lib/cache/lib-core/" ".makefiles/ext/na4ma4/lib/core/"
+    mkdir -p ".makefiles/ext/na4ma4/lib/core"
+    cp -r ".makefiles/ext/na4ma4/lib/cache/lib-core"/* ".makefiles/ext/na4ma4/lib/core/"
 fi
 
 # # Finally, invoke the build-resource command to produce the actual resource that

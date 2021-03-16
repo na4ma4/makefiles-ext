@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-set +x
 
 source "$(dirname "${BASH_SOURCE[0]}")/../include/common.bash"
 
@@ -19,7 +18,7 @@ target="${NA4MA4_MF_ROOT}/pkg/${name}/v${version}"
 if [ ! -d "${target}" ]; then
     log "[na4ma4] copying ${name}@v${version} package archive from main cache"
     mkdir -p "${target}"
-    cp -r ".makefiles/ext/na4ma4/lib/cache/${name}/v${version}/" "${target}"
+    cp -r ".makefiles/ext/na4ma4/lib/cache/${name}/v${version}"/* "${target}/"
 fi
 
 if [ -d "${target}/install.d" ]; then
