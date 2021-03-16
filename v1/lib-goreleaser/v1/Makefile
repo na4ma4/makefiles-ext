@@ -8,10 +8,22 @@ artifacts/test/goreleaser: $(GORELEASER) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(GORELEASER) check | tee "$(@)"
 
-test:: artifacts/test/goreleaser
+lint:: artifacts/test/goreleaser
 
 tools:: $(GORELEASER)
 
-.PHONY: goreleaser-%
-goreleaser-%: $(GORELEASER)
-	$(GORELEASER) $(*) $(GORELEASER_ARGS)
+.PHONY: goreleaser-build
+goreleaser-build: $(GORELEASER)
+	$(GORELEASER) build $(GORELEASER_ARGS)
+
+.PHONY: goreleaser-check
+goreleaser-check: $(GORELEASER)
+	$(GORELEASER) check $(GORELEASER_ARGS)
+
+.PHONY: goreleaser-init
+goreleaser-init: $(GORELEASER)
+	$(GORELEASER) init $(GORELEASER_ARGS)
+
+.PHONY: goreleaser-release
+goreleaser-release: $(GORELEASER)
+	$(GORELEASER) release $(GORELEASER_ARGS)
