@@ -4,9 +4,10 @@ $(GOLANGCILINT):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" $(GOLANGCILINT_VERSION)
 
+artifacts/lint/golangci-lint: SHELL=/bin/bash -o pipefail
 artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	$(GOLANGCILINT) run --enable-all --disable 'exhaustivestruct,interfacer,maligned,paralleltest' ./... | tee "$(@)"
+	$(GOLANGCILINT) run --sort-results --enable-all --disable 'exhaustivestruct,interfacer,maligned,paralleltest' ./... | tee "$(@)"
 
 lint:: artifacts/lint/golangci-lint
 
