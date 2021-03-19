@@ -1,8 +1,6 @@
 # AUTOWIRE_DEPS += autowire/container.go
 # AUTOWIRE_DEPS += autowire/service.go
-# AUTOWIRE_DEPS += dazapi/hivesettings.go
-# AUTOWIRE_DEPS += dazapi/adminserver.go
-# AUTOWIRE_DEPS += daz/admin.pb.go
+# AUTOWIRE_DEPS += wev/server.go
 
 # AUTOWIRE_GEN += autowire/wire_gen.go
 
