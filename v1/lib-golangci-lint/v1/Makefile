@@ -1,9 +1,15 @@
 .DELETE_ON_ERROR:
 
+## Example Variables
 # GOLANGCILINT_CHECK_DISABLE += exhaustivestruct
-# GOLANGCILINT_CHECK_DISABLE += interfacer
-# GOLANGCILINT_CHECK_DISABLE += maligned
 # GOLANGCILINT_CHECK_DISABLE += paralleltest
+
+# GOLANGCILINT_ARGS += --verbose
+
+# GOLANGCILINT_VERSION := v1.36.1
+
+## All good below here.
+GOLANGCILINT_VERSION ?= v1.38.0
 
 # A literal space.
 _golangcilint_space :=
@@ -12,7 +18,6 @@ _golangcilint_space +=
 # A literal comma.
 _golangcilint_comma := ,
 
-GOLANGCILINT_VERSION ?= v1.38.0
 GOLANGCILINT := artifacts/bin/$(GOLANGCILINT_VERSION)/golangci-lint
 $(GOLANGCILINT):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
@@ -21,7 +26,8 @@ $(GOLANGCILINT):
 artifacts/lint/golangci-lint: SHELL=/bin/bash -o pipefail
 artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	$(GOLANGCILINT) run --sort-results --disable '$(subst $(_golangcilint_space),$(_golangcilint_comma),$(GOLANGCILINT_CHECK_DISABLE))' ./... | tee "$(@)"
+	$(eval GOLANGCILINT_ARGS += $(if $(GOLANGCILINT_CHECK_DISABLE),--disable '$(subst $(_golangcilint_space),$(_golangcilint_comma),$(GOLANGCILINT_CHECK_DISABLE))',))
+	$(GOLANGCILINT) run --sort-results $(GOLANGCILINT_ARGS) ./... | tee "$(@)"
 
 lint:: artifacts/lint/golangci-lint
 
