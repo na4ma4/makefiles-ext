@@ -3,6 +3,8 @@ ifeq "$(_GO_GTE_1_14)" "1"
 _MODFILEARG := -modfile tools.mod
 endif
 
+.DELETE_ON_ERROR:
+
 STATICCHECK := artifacts/bin/staticcheck
 $(STATICCHECK):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"

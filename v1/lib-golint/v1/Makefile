@@ -3,6 +3,8 @@ ifeq "$(_GO_GTE_1_14)" "1"
 _MODFILEARG := -modfile tools.mod
 endif
 
+.DELETE_ON_ERROR:
+
 GOLINT := artifacts/bin/golint
 $(GOLINT):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"

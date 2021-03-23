@@ -9,6 +9,8 @@ ifeq "$(_GO_GTE_1_14)" "1"
 _MODFILEARG := -modfile tools.mod
 endif
 
+.DELETE_ON_ERROR:
+
 WIRE := artifacts/bin/wire
 $(WIRE):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
