@@ -9,7 +9,7 @@
 # GOLANGCILINT_VERSION := v1.36.1
 
 ## All good below here.
-GOLANGCILINT_VERSION ?= v1.38.0
+GOLANGCILINT_VERSION ?= v1.40.1
 
 # A literal space.
 _golangcilint_space :=
@@ -27,7 +27,7 @@ artifacts/lint/golangci-lint: SHELL=/bin/bash -o pipefail
 artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(eval GOLANGCILINT_ARGS += $(if $(GOLANGCILINT_CHECK_DISABLE),--disable '$(subst $(_golangcilint_space),$(_golangcilint_comma),$(GOLANGCILINT_CHECK_DISABLE))',))
-	$(GOLANGCILINT) run --sort-results $(GOLANGCILINT_ARGS) ./... | tee "$(@)"
+	$(GOLANGCILINT) run --sort-results --max-same-issues 0 --max-issues-per-linter 0 $(GOLANGCILINT_ARGS) ./... | tee "$(@)"
 
 lint:: artifacts/lint/golangci-lint
 
