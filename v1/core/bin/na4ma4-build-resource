@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")/../include/common.bash"
+
+if [[ $# < 1 ]]; then
+    echo "Usage: na4ma4-build-resource target"
+    echo
+    echo "  Produces a target resource by installing package that contains it."
+    exit 1
+fi
+
+target="${1}"
+
+if [ -e "${target}" ]; then
+    exit 0
+fi
+
+if ! [[ $target =~ ^\.makefiles/ext/na4ma4/(pkg|lib)/(.+)/v([0-9]+)/ ]]; then
+    die "[na4ma4] can not build '${target}', target names must be of the form '.makefiles/ext/na4ma4/pkg/<package>/v<version>/...' or '.makefiles/ext/na4ma4/lib/<package>/v<version>/...'."
+fi
+
+srctype="${BASH_REMATCH[1]}"
+package="${BASH_REMATCH[2]}"
+version="${BASH_REMATCH[3]}"
+
+case "${srctype}" in
+    lib)
+        na4ma4-install-lib "${package}" "${version}"
+        ;;
+    pkg|*)
+        na4ma4-install-pkg "${package}" "${version}"
+        ;;
+esac
+
+if [ ! -e "${target}" ]; then
+    die "[na4ma4] ${package}@v${version} does not include ${target}"
+fi
