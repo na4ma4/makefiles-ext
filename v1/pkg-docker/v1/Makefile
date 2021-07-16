@@ -51,15 +51,19 @@ docker-push: $(_DOCKER_PUSH_TOUCH_FILES)
 artifacts/docker/image-id/$(DOCKER_REPO): Dockerfile .dockerignore $(DOCKER_BUILD_REQ)
 	@mkdir -p "$(@D)"
 
+	docker buildx create --name makefiles --use --node makefiles
 	docker buildx build \
-		--cache-from=type=registry,ref=$(DOCKER_REPO) \
-		--cache-to=type=registry,ref=$(DOCKER_REPO) \
+		--cache-from=type=registry,ref=$(DOCKER_REPO):_cache \
+		--cache-to=type=registry,ref=$(DOCKER_REPO):_cache \
 		--pull \
 		--output=type=docker \
 		--build-arg "VERSION=$(SEMVER)" \
-		--iidfile "$@" \
+		--iidfile "$(@)" \
+		--tag "$(DOCKER_REPO):buildx_temp_tag" \
 		$(DOCKER_BUILD_ARGS) \
 		.
+	docker image inspect "$(DOCKER_REPO):buildx_temp_tag" | jq -r '.[0].Id' | tee "$(@)"
+	docker image rm "$(DOCKER_REPO):buildx_temp_tag"
 
 artifacts/docker/tag/$(DOCKER_REPO)/%.touch: artifacts/docker/image-id/$(DOCKER_REPO)
 	docker tag "$(shell cat "$<")" "$(DOCKER_REPO):$*"
