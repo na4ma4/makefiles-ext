@@ -6,7 +6,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../include/common.bash"
 if [[ $# < 2 ]]; then
     echo "Usage: na4ma4-install-lib name version"
     echo
-    echo "  Installs a specific version of a na4ma4 Makefiles extension package."
+    echo "  Installs a specific version of a na4ma4 Makefiles extension library."
     exit 1
 fi
 
