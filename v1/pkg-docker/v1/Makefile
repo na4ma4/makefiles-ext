@@ -67,6 +67,7 @@ artifacts/docker/image-id/$(DOCKER_REPO): Dockerfile .dockerignore $(DOCKER_BUIL
 
 artifacts/docker/tag/$(DOCKER_REPO)/%.touch: artifacts/docker/image-id/$(DOCKER_REPO)
 	docker tag "$(shell cat "$<")" "$(DOCKER_REPO):$*"
+	-@docker image rm --no-prune "$(DOCKER_REPO):buildx_temp_tag"
 	@mkdir -p "$(@D)"
 	@touch "$@"
 
