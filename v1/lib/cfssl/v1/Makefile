@@ -1,19 +1,14 @@
-_GO_GTE_1_14 := $(shell expr `go version | cut -d' ' -f 3 | tr -d 'a-z' | cut -d'.' -f2` \>= 14)
-ifeq "$(_GO_GTE_1_14)" "1"
-_MODFILEARG := -modfile tools.mod
-endif
-
 .DELETE_ON_ERROR:
 
 CFSSL := artifacts/bin/cfssl
 $(CFSSL):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go get $(_MODFILEARG) github.com/cloudflare/cfssl/cmd/cfssl
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/cloudflare/cfssl/cmd/cfssl@latest
 
 CFSSLJSON := artifacts/bin/cfssljson
 $(CFSSLJSON):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go get $(_MODFILEARG) github.com/cloudflare/cfssl/cmd/cfssljson
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/cloudflare/cfssl/cmd/cfssljson@latest
 
 .PHONY: cfssl
 cfssl: artifacts/certs/server.pem artifacts/certs/client.pem

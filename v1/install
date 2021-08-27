@@ -4,6 +4,9 @@ set -euo pipefail
 # MF_PROJECT_ROOT must always be defined.
 export MF_PROJECT_ROOT="${MF_PROJECT_ROOT:-$(pwd)}"
 
+# _gitbranch should default to "main", but can be changed while developing.
+_gitbranch="main"
+
 # Check if we've already got the na4ma4 core library.
 if [[ ! -d ".makefiles/ext/na4ma4/cache" ]]; then
     tmpdir="$(mktemp -d)"
@@ -16,14 +19,14 @@ if [[ ! -d ".makefiles/ext/na4ma4/cache" ]]; then
         --show-error \
         --location \
         --create-dirs \
-        --output "${tmpdir}/main.zip" \
-        "https://github.com/na4ma4/makefiles-ext/archive/main.zip"
+        --output "${tmpdir}/${_gitbranch}.zip" \
+        "https://github.com/na4ma4/makefiles-ext/archive/${_gitbranch}.zip"
 
     # Unpack the library into the .makefiles directory.
-    unzip -q "${tmpdir}/main.zip" -d "${tmpdir}"
-    mv "${tmpdir}/main.zip" "${tmpdir}/makefiles-ext-main/v1/main.zip"
+    unzip -q "${tmpdir}/${_gitbranch}.zip" -d "${tmpdir}"
+    mv "${tmpdir}/${_gitbranch}.zip" "${tmpdir}/makefiles-ext-${_gitbranch}/v1/${_gitbranch}.zip"
     mkdir -p ".makefiles/ext/na4ma4/cache"
-    cp -r "${tmpdir}/makefiles-ext-main/v1"/* ".makefiles/ext/na4ma4/cache/"
+    cp -r "${tmpdir}/makefiles-ext-${_gitbranch}/v1"/* ".makefiles/ext/na4ma4/cache/"
 fi
 
 if [[ ! -d ".makefiles/ext/na4ma4/core" ]]; then

@@ -1,14 +1,9 @@
-_GO_GTE_1_14 := $(shell expr `go version | cut -d' ' -f 3 | tr -d 'a-z' | cut -d'.' -f2` \>= 14)
-ifeq "$(_GO_GTE_1_14)" "1"
-_MODFILEARG := -modfile tools.mod
-endif
-
 .DELETE_ON_ERROR:
 
 MISSPELL := artifacts/bin/misspell
 $(MISSPELL):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go get $(_MODFILEARG) github.com/client9/misspell/cmd/misspell
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/client9/misspell/cmd/misspell@latest
 
 artifacts/lint/misspell: SHELL=/bin/bash -o pipefail
 artifacts/lint/misspell: $(MISSPELL) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
