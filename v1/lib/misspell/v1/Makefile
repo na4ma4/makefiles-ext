@@ -6,7 +6,7 @@ $(MISSPELL):
 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/client9/misspell/cmd/misspell@latest
 
 artifacts/lint/misspell: SHELL=/bin/bash -o pipefail
-artifacts/lint/misspell: $(MISSPELL) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
+artifacts/lint/misspell: $(MISSPELL) $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(MISSPELL) -w -error -locale UK ./... | tee "$(@)"
 

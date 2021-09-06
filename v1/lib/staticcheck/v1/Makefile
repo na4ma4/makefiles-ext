@@ -6,7 +6,7 @@ $(STATICCHECK):
 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install honnef.co/go/tools/cmd/staticcheck@latest
 
 artifacts/cover/staticheck/unused-graph.txt: SHELL=/bin/bash -o pipefail
-artifacts/cover/staticheck/unused-graph.txt: $(STATICCHECK) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
+artifacts/cover/staticheck/unused-graph.txt: $(STATICCHECK) $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(STATICCHECK) -debug.unused-graph "$(@)" ./...
 

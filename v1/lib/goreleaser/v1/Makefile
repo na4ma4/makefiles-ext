@@ -7,7 +7,7 @@ $(GORELEASER):
 	curl -sSfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" $(GORELEASER_VERSION)
 
 artifacts/test/goreleaser: SHELL=/bin/bash -o pipefail
-artifacts/test/goreleaser: $(GORELEASER) .goreleaser.yml $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
+artifacts/test/goreleaser: $(GORELEASER) .goreleaser.yml $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(GORELEASER) check | tee "$(@)"
 

@@ -24,7 +24,7 @@ $(GOLANGCILINT):
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" $(GOLANGCILINT_VERSION)
 
 artifacts/lint/golangci-lint: SHELL=/bin/bash -o pipefail
-artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
+artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(eval GOLANGCILINT_ARGS += $(if $(GOLANGCILINT_CHECK_DISABLE),--disable '$(subst $(_golangcilint_space),$(_golangcilint_comma),$(GOLANGCILINT_CHECK_DISABLE))',))
 	$(GOLANGCILINT) run --sort-results --max-same-issues 0 --max-issues-per-linter 0 $(GOLANGCILINT_ARGS) ./... | tee "$(@)"
