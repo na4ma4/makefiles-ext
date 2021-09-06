@@ -3,7 +3,7 @@
 STATICCHECK := artifacts/bin/staticcheck
 $(STATICCHECK):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install honnef.co/go/tools/cmd/staticcheck
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install honnef.co/go/tools/cmd/staticcheck@latest
 
 artifacts/cover/staticheck/unused-graph.txt: SHELL=/bin/bash -o pipefail
 artifacts/cover/staticheck/unused-graph.txt: $(STATICCHECK) $(GENERATED_FILES) $(GO_TEST_REQ) $(GO_SOURCE_FILES)
