@@ -1,32 +1,38 @@
 .DELETE_ON_ERROR:
 
-GORELEASER_VERSION ?= v0.177.0
-GORELEASER := artifacts/bin/$(GORELEASER_VERSION)/goreleaser
-$(GORELEASER):
-	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	curl -sSfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" $(GORELEASER_VERSION)
+GORELEASER_VERSION ?= v0.183.0
+GO_MODULE_PATH := $(go list -m)
+GORELEASER := docker run --rm --privileged \
+  -v "$(MF_PROJECT_ROOT):/go/src/$(GO_MODULE_PATH)" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -w /go/src/$(GO_MODULE_PATH) \
+  -e GITHUB_TOKEN \
+  -e DOCKER_USERNAME \
+  -e DOCKER_PASSWORD \
+  -e DOCKER_REGISTRY \
+  goreleaser/goreleaser
 
 artifacts/test/goreleaser: SHELL=/bin/bash -o pipefail
-artifacts/test/goreleaser: $(GORELEASER) .goreleaser.yml $(GENERATED_FILES) $(GO_SOURCE_FILES)
+artifacts/test/goreleaser: .goreleaser.yml $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	$(GORELEASER) check | tee "$(@)"
 
 lint:: artifacts/test/goreleaser
 
-tools:: $(GORELEASER)
+tools::
 
 .PHONY: goreleaser-build
-goreleaser-build: $(GORELEASER)
+goreleaser-build:
 	$(GORELEASER) build $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-check
-goreleaser-check: $(GORELEASER)
+goreleaser-check:
 	$(GORELEASER) check $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-init
-goreleaser-init: $(GORELEASER)
+goreleaser-init:
 	$(GORELEASER) init $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-release
-goreleaser-release: $(GORELEASER)
+goreleaser-release:
 	$(GORELEASER) release $(GORELEASER_ARGS)
