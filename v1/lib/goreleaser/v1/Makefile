@@ -1,7 +1,7 @@
 .DELETE_ON_ERROR:
 
 GORELEASER_VERSION ?= v0.183.0
-GO_MODULE_PATH := $(go list -m)
+GO_MODULE_PATH := $(shell go list -m)
 GORELEASER := docker run --rm --privileged \
   -v "$(MF_PROJECT_ROOT):/go/src/$(GO_MODULE_PATH)" \
   -v /var/run/docker.sock:/var/run/docker.sock \
@@ -10,7 +10,7 @@ GORELEASER := docker run --rm --privileged \
   -e DOCKER_USERNAME \
   -e DOCKER_PASSWORD \
   -e DOCKER_REGISTRY \
-  goreleaser/goreleaser
+  goreleaser/goreleaser:$(GORELEASER_VERSION)
 
 artifacts/test/goreleaser: SHELL=/bin/bash -o pipefail
 artifacts/test/goreleaser: .goreleaser.yml $(GENERATED_FILES) $(GO_SOURCE_FILES)
