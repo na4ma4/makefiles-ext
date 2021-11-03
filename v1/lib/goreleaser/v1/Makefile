@@ -15,7 +15,7 @@ GORELEASER := docker run --rm --privileged \
 artifacts/test/goreleaser: SHELL=/bin/bash -o pipefail
 artifacts/test/goreleaser: .goreleaser.yml $(GENERATED_FILES) $(GO_SOURCE_FILES)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	$(GORELEASER) check | tee "$(@)"
+	DOCKER_HOST= DOCKER_TLS_VERIFY= $(GORELEASER) check | tee "$(@)"
 
 lint:: artifacts/test/goreleaser
 
@@ -23,16 +23,16 @@ tools::
 
 .PHONY: goreleaser-build
 goreleaser-build:
-	$(GORELEASER) build $(GORELEASER_ARGS)
+	DOCKER_HOST= DOCKER_TLS_VERIFY= $(GORELEASER) build $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-check
 goreleaser-check:
-	$(GORELEASER) check $(GORELEASER_ARGS)
+	DOCKER_HOST= DOCKER_TLS_VERIFY= $(GORELEASER) check $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-init
 goreleaser-init:
-	$(GORELEASER) init $(GORELEASER_ARGS)
+	DOCKER_HOST= DOCKER_TLS_VERIFY= $(GORELEASER) init $(GORELEASER_ARGS)
 
 .PHONY: goreleaser-release
 goreleaser-release:
-	$(GORELEASER) release $(GORELEASER_ARGS)
+	DOCKER_HOST= DOCKER_TLS_VERIFY= $(GORELEASER) release $(GORELEASER_ARGS)
