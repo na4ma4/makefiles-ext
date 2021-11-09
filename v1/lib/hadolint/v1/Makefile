@@ -6,7 +6,7 @@ HADOLINT_IGNORE ?=
 HADOLINT_OS ?= $(shell uname -s)
 HADOLINT_ARCH ?= $(shell uname -m)
 
-HADOLINT_VERSION ?= v2.7.0
+HADOLINT_VERSION ?= v2.8.0
 HADOLINT := artifacts/bin/$(HADOLINT_VERSION)/hadolint
 $(HADOLINT):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
