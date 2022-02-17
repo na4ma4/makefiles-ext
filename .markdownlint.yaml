@@ -1,0 +1,4 @@
+---
+MD010: false
+MD013:
+  code_block_line_length: 110
