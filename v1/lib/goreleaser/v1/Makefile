@@ -1,6 +1,6 @@
 .DELETE_ON_ERROR:
 
-GORELEASER_VERSION ?= v1.5.0
+GORELEASER_VERSION ?= v1.7.0
 GO_MODULE_PATH := $(shell go list -m)
 GORELEASER := docker run --rm --privileged \
   -v "$(MF_PROJECT_ROOT):/go/src/$(GO_MODULE_PATH)" \
