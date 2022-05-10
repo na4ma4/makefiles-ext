@@ -1,7 +1,6 @@
 .DELETE_ON_ERROR:
 
-GORELEASER_VERSION ?= v1.7.0
-
+GORELEASER_VERSION ?= v1.8.3
 GORELEASER := artifacts/bin/goreleaser
 $(GORELEASER):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
