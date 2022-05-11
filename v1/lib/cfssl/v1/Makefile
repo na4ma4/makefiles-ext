@@ -1,14 +1,16 @@
 .DELETE_ON_ERROR:
 
+#curl -sSfL https://raw.githubusercontent.com/na4ma4/makefiles-ext/main/scripts/install-cfssl.sh | sh -s -- -b "$(@D)"
+
 CFSSL := artifacts/bin/cfssl
 $(CFSSL):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	curl -sSfL https://raw.githubusercontent.com/na4ma4/makefiles-ext/main/scripts/install-cfssl.sh | sh -s -- -b "$(@D)"
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/cloudflare/cfssl/cmd/cfssl@latest
 
 CFSSLJSON := artifacts/bin/cfssljson
 $(CFSSLJSON):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	curl -sSfL https://raw.githubusercontent.com/na4ma4/makefiles-ext/main/scripts/install-cfssl.sh | sh -s -- -b "$(@D)"
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/cloudflare/cfssl/cmd/cfssljson@latest
 
 .PHONY: cfssl
 cfssl: artifacts/certs/server.pem artifacts/certs/client.pem
