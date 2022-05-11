@@ -214,7 +214,7 @@ http_download_wget() (
 
 http_download() (
   log_debug "http_download(local_file=$1, url=$2)"
-  if [[ -s "${1}" ]]; then
+  if [ -s "${1}" ]; then
     log_debug "file exists, skipping"
     return
   fi
@@ -607,7 +607,7 @@ main() (
   tag=$1
 
   echo "|${ARCH_LIST}|" | grep -q "|${os}/${arch}|" >/dev/null
-  if [[ ${?} != 0 ]]; then
+  if [ ${?} != 0 ]; then
     log_warn "${os}/${arch} not supported, falling back to go install"
     tag=${tag:-latest}
     mkdir -p "${install_dir}"
