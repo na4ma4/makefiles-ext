@@ -4,7 +4,8 @@ GORELEASER_VERSION ?= v1.8.3
 GORELEASER := artifacts/bin/goreleaser
 $(GORELEASER):
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/goreleaser/goreleaser@$(GORELEASER_VERSION)
+	curl -sSfL https://raw.githubusercontent.com/na4ma4/makefiles-ext/main/scripts/install-goreleaser.sh | sh -s -- -b "$(@D)" -v "$(GORELEASER_VERSION)"
+# GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/goreleaser/goreleaser@$(GORELEASER_VERSION)
 
 artifacts/test/goreleaser: SHELL=/bin/bash -o pipefail
 artifacts/test/goreleaser: .goreleaser.yml $(GORELEASER) $(GENERATED_FILES) $(GO_SOURCE_FILES)
