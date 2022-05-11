@@ -6,8 +6,20 @@ set -u
 PROJECT_NAME="cfssl"
 OWNER="cloudflare"
 REPO="${PROJECT_NAME}"
+# VERSION="${VERSION:-latest}"
+
+ARCH_LIST="darwin/amd64|linux/amd64|windows/amd64"
+
+BINARY_LIST="cfssl cfssljson"
+
 GITHUB_DOWNLOAD_PREFIX=https://github.com/${OWNER}/${REPO}/releases/download
-INSTALL_SH_BASE_URL=https://raw.githubusercontent.com/${OWNER}/${PROJECT_NAME}
+GOINSTALL_PREFIX=github.com/cloudflare/cfssl/cmd/
+
+# PROJECT_NAME="cfssl"
+# OWNER="cloudflare"
+# REPO="${PROJECT_NAME}"
+# GITHUB_DOWNLOAD_PREFIX=https://github.com/${OWNER}/${REPO}/releases/download
+# INSTALL_SH_BASE_URL=https://raw.githubusercontent.com/${OWNER}/${PROJECT_NAME}
 PROGRAM_ARGS=$@
 
 #
@@ -166,32 +178,6 @@ uname_arch_check() (
   return 1
 )
 
-unpack() (
-  archive=$1
-
-  log_trace "unpack(archive=${archive})"
-
-  case "${archive}" in
-    *.tar.gz | *.tgz) tar --no-same-owner -xzf "${archive}" ;;
-    *.tar) tar --no-same-owner -xf "${archive}" ;;
-    *.zip) unzip -q "${archive}" ;;
-    *.dmg) extract_from_dmg "${archive}" ;;
-    *)
-      log_err "unpack unknown archive format for ${archive}"
-      return 1
-      ;;
-  esac
-)
-
-extract_from_dmg() (
-  dmg_file=$1
-
-  mount_point="/Volumes/tmp-dmg"
-  hdiutil attach -quiet -nobrowse -mountpoint "${mount_point}" "${dmg_file}"
-  cp -fR "${mount_point}/." ./
-  hdiutil detach -quiet -force "${mount_point}"
-)
-
 http_download_curl() (
   local_file=$1
   source_url=$2
@@ -227,7 +213,11 @@ http_download_wget() (
 )
 
 http_download() (
-  log_debug "http_download(url=$2)"
+  log_debug "http_download(local_file=$1, url=$2)"
+  if [[ -s "${1}" ]]; then
+    log_debug "file exists, skipping"
+    return
+  fi
   if is_command curl; then
     http_download_curl "$@"
     return
@@ -240,10 +230,11 @@ http_download() (
 )
 
 http_copy() (
-  tmp=$(mktemp)
+  # tmp=$(mktemp)
+  tmp="/tmp/$(echo "${1}" | base64)"
   http_download "${tmp}" "$1" "$2" || return 1
   body=$(cat "$tmp")
-  rm -f "${tmp}"
+  # rm -f "${tmp}"
   echo "$body"
 )
 
@@ -497,26 +488,6 @@ get_binary_name() (
   echo "${binary}"
 )
 
-
-# # get_format_name [os] [arch] [default-format]
-# #
-# # outputs an adjusted file format
-# #
-# get_format_name() (
-#   os="$1"
-#   arch="$2"
-#   format="$3"
-#   original_format="${format}"
-
-#   case ${os} in
-#     windows) format=zip ;;
-#   esac
-
-#   log_trace "get_format_name(os=${os}, arch=${arch}, format=${original_format}) returned '${format}'"
-
-#   echo "${format}"
-# )
-
 # download_and_install_asset [release-url-prefix] [download-path] [install-path] [name] [os] [arch] [version] [binary]
 #
 # attempts to download the archive and install it to the given path.
@@ -608,6 +579,9 @@ install_asset() (
 main() (
   # parse arguments
 
+  os=$(uname_os)
+  arch=$(uname_arch)
+
   # note: never change default install directory (this must always be backwards compatible)
   install_dir=${install_dir:-./bin}
 
@@ -632,6 +606,21 @@ main() (
   set +u
   tag=$1
 
+  echo "|${ARCH_LIST}|" | grep -q "|${os}/${arch}|" >/dev/null
+  if [[ ${?} != 0 ]]; then
+    log_warn "${os}/${arch} not supported, falling back to go install"
+    tag=${tag:-latest}
+    mkdir -p "${install_dir}"
+    export GOBIN="$(realpath "${install_dir}")"
+    for binary in ${BINARY_LIST}; do
+      log_info go install ${GOINSTALL_PREFIX}${binary}@${tag}
+      go install ${GOINSTALL_PREFIX}${binary}@${tag}
+    done
+
+    return
+  fi
+
+
   if [ -z "${tag}" ]; then
     log_info "checking github for the current release tag"
     tag=""
@@ -649,19 +638,17 @@ main() (
   fi
 
   # run the application
-
   version=$(tag_to_version "${tag}")
-  os=$(uname_os)
-  arch=$(uname_arch)
   download_url="${GITHUB_DOWNLOAD_PREFIX}/${tag}"
 
-  for binary in cfssl cfssljson; do
+  for binary in ${BINARY_LIST}; do
     binary=$(get_binary_name "${os}" "${arch}" "${binary}")
 
     log_info "using release tag='${tag}' version='${version}' os='${os}' arch='${arch}'"
 
-    download_dir=$(mktemp -d)
-    trap 'rm -rf -- "$download_dir"' EXIT
+    mkdir -p /tmp/installsh
+    download_dir="/tmp/installsh"
+    # trap 'rm -rf -- "$download_dir"' EXIT
 
     log_debug "downloading files into ${download_dir}"
 
