@@ -134,7 +134,7 @@ http_download_wget() (
 
 http_download() (
   log_debug "http_download(local_file=$1, url=$2)"
-  if [[ -s "${1}" ]]; then
+  if [ -s "${1}" ]; then
     log_debug "file exists, skipping"
     return
   fi
