@@ -19,9 +19,9 @@ _golangcilint_space +=
 _golangcilint_comma := ,
 
 GOLANGCILINT := artifacts/bin/$(GOLANGCILINT_VERSION)/golangci-lint
-$(GOLANGCILINT):
+artifacts/bin/%/golangci-lint:
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" $(GOLANGCILINT_VERSION)
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$(MF_PROJECT_ROOT)/$(@D)" "$(*)"
 
 artifacts/lint/golangci-lint: SHELL=/bin/bash -o pipefail
 artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_SOURCE_FILES)
