@@ -1,6 +1,6 @@
 .DELETE_ON_ERROR:
 
-TWIRP_PROTOC_VERSION ?= latest
+TWIRP_PROTOC_VERSION ?= v8.1.3
 
 TWIRP_PROTOC_COMMAND := artifacts/bin/$(TWIRP_PROTOC_VERSION)/protoc-gen-twirp
 artifacts/bin/%/protoc-gen-twirp:

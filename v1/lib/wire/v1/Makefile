@@ -6,10 +6,14 @@
 
 .DELETE_ON_ERROR:
 
-WIRE := artifacts/bin/wire
-$(WIRE):
+WIRE_VERSION ?= 0.5.0
+
+WIRE := artifacts/bin/$(WIRE_VERSION)/wire
+artifacts/bin/%/wire:
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/google/wire/cmd/wire@latest
+	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/google/wire/cmd/wire@$(*)
 
 $(AUTOWIRE_GEN): $(AUTOWIRE_DEPS) | $(WIRE)
 	$(WIRE) "./$(@D)"
+
+tools:: $(WIRE)
