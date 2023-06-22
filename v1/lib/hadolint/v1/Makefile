@@ -18,7 +18,8 @@ HADOLINT_TARGET ?= Dockerfile
 artifacts/lint/hadolint/%: SHELL=/bin/bash -o pipefail
 artifacts/lint/hadolint/%: % $(HADOLINT)
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	docker run --rm -v "$(MF_PROJECT_ROOT):$(MF_PROJECT_ROOT):ro" --workdir "$(MF_PROJECT_ROOT)" hadolint/hadolint:$(HADOLINT_VERSION) hadolint -V $(addprefix --ignore , $(HADOLINT_IGNORE)) "$(<)"
+	cat "$(<)" | docker run --rm hadolint/hadolint:$(HADOLINT_VERSION) hadolint -V $(addprefix --ignore , $(HADOLINT_IGNORE)) -
+#	docker run --rm -v "$(MF_PROJECT_ROOT):$(MF_PROJECT_ROOT):ro" --workdir "$(MF_PROJECT_ROOT)" hadolint/hadolint:$(HADOLINT_VERSION) hadolint -V $(addprefix --ignore , $(HADOLINT_IGNORE)) "$(<)"
 #	$(HADOLINT) $(addprefix --ignore , $(HADOLINT_IGNORE)) "$(<)" | tee "$(@)"
 
 lint:: $(foreach TARGET,$(HADOLINT_TARGET),artifacts/lint/hadolint/$(TARGET))
