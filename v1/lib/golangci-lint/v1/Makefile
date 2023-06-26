@@ -9,7 +9,7 @@
 # GOLANGCILINT_VERSION := v1.36.1
 
 ## All good below here.
-GOLANGCILINT_VERSION ?= v1.53.2
+GOLANGCILINT_VERSION ?= v1.53.3
 
 # A literal space.
 _golangcilint_space :=
