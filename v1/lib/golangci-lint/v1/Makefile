@@ -32,3 +32,6 @@ artifacts/lint/golangci-lint: $(GOLANGCILINT) $(GENERATED_FILES) $(GO_SOURCE_FIL
 lint:: artifacts/lint/golangci-lint
 
 tools:: $(GOLANGCILINT)
+
+update-deps::
+	curl -sSL -o .golangci.yml https://gist.githubusercontent.com/na4ma4/f165f6c9af35cda6b330efdcc07a9e26/raw/.golangci.yml
