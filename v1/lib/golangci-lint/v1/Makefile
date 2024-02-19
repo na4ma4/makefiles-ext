@@ -1,5 +1,7 @@
 .DELETE_ON_ERROR:
 
+-include .makefiles/ext/na4ma4/lib/force/v1/Makefile
+
 ## Example Variables
 # GOLANGCILINT_CHECK_DISABLE += exhaustivestruct
 # GOLANGCILINT_CHECK_DISABLE += paralleltest
@@ -33,5 +35,8 @@ lint:: artifacts/lint/golangci-lint
 
 tools:: $(GOLANGCILINT)
 
-update-deps::
+update-deps:: 
+	make FORCE_DEPS=.golangci.yml .golangci.yml
+
+.golangci.yml:
 	curl -sSL -o .golangci.yml https://gist.githubusercontent.com/na4ma4/f165f6c9af35cda6b330efdcc07a9e26/raw/.golangci.yml
