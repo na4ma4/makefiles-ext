@@ -6,7 +6,7 @@
 
 .DELETE_ON_ERROR:
 
-WIRE_VERSION ?= 0.5.0
+WIRE_VERSION ?= v0.6.0
 
 WIRE := artifacts/bin/$(WIRE_VERSION)/wire
 artifacts/bin/%/wire:
