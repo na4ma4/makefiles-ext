@@ -35,6 +35,12 @@ lint:: artifacts/lint/golangci-lint
 
 tools:: $(GOLANGCILINT)
 
+# _clean --- Clears the golangci-lint cache. Invoked by the "clean" target from the
+# common makefile before the makefiles themselves are removed.
+.PHONY: _clean
+_clean:: $(GOLANGCILINT)
+	$(GOLANGCILINT) cache clean
+
 update-deps:: 
 	make FORCE_DEPS=.golangci.yml .golangci.yml
 
