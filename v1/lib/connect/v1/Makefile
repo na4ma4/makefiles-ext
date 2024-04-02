@@ -4,22 +4,22 @@ BUF_VERSION ?= v1.30.0
 CONNECT_PROTOC_VERSION ?= v1.16.0
 GRPCURL_VERSION ?= v1.8.9
 
-PROTO_CONNECT_FILES += $(foreach f,$(PROTO_FILES),$(if $(findstring /_,/$f),,$(dir $(f))$(notdir $(patsubst %/,%,$(dir $(f))))connect/$(notdir $(f:.proto=.connect.go))))
+# PROTO_CONNECT_FILES += $(foreach f,$(PROTO_FILES),$(if $(findstring /_,/$f),,$(dir $(f))$(notdir $(patsubst %/,%,$(dir $(f))))connect/$(notdir $(f:.proto=.connect.go))))
 
 GENERATED_FILES += $(PROTO_CONNECT_FILES)
 
-BUF_COMMAND := artifacts/bin/$(BUF_VERSION)/buf
-artifacts/bin/%/buf:
-	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/bufbuild/buf/cmd/buf@$(*)
+# BUF_COMMAND := artifacts/bin/$(BUF_VERSION)/buf
+# artifacts/bin/%/buf:
+# 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
+# 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/bufbuild/buf/cmd/buf@$(*)
 
-GRPCURL_COMMAND := artifacts/bin/$(GRPCURL_VERSION)/grpcurl
-artifacts/bin/%/grpcurl: $(BUF_COMMAND)
-	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
-	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/fullstorydev/grpcurl/cmd/grpcurl@$(*)
+# GRPCURL_COMMAND := artifacts/bin/$(GRPCURL_VERSION)/grpcurl
+# artifacts/bin/%/grpcurl: $(BUF_COMMAND)
+# 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
+# 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install github.com/fullstorydev/grpcurl/cmd/grpcurl@$(*)
 
 CONNECT_PROTOC_COMMAND := artifacts/bin/$(CONNECT_PROTOC_VERSION)/protoc-gen-connect-go
-artifacts/bin/%/protoc-gen-connect-go: $(GRPCURL_COMMAND)
+artifacts/bin/%/protoc-gen-connect-go:
 	-@mkdir -p "$(MF_PROJECT_ROOT)/$(@D)"
 	GOBIN="$(MF_PROJECT_ROOT)/$(@D)" go install connectrpc.com/connect/cmd/protoc-gen-connect-go@$(*)
 
