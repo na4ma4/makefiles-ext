@@ -35,6 +35,16 @@ $1: $2 $(PROTOC_COMMAND) $(CONNECT_PROTOC_COMMAND) artifacts/protobuf/bin/protoc
 		$(MF_PROJECT_ROOT)/$$(<D)/*.proto
 endef
 
+# %_connect.go: SHELL=/bin/bash -o pipefail
+# %_connect.go: $(PROTOC_COMMAND) $(CONNECT_PROTOC_COMMAND) artifacts/protobuf/bin/protoc-gen-go artifacts/protobuf/args/common artifacts/protobuf/args/go
+# 	-@mkdir -p "$(MF_PROJECT_ROOT)/$$(@D)"
+# 	PATH="$(dir $(MF_PROJECT_ROOT)/$(CONNECT_PROTOC_COMMAND)):$(MF_PROJECT_ROOT)/artifacts/protobuf/bin:$$$$PATH" $(PROTOC_COMMAND) \
+# 		--proto_path="$(dir $(PROTOC_COMMAND))../include" \
+# 		--connect-go_opt=module=$$$$(go list -m) \
+# 		--connect-go_out=. \
+# 		$$$$(cat artifacts/protobuf/args/common artifacts/protobuf/args/go) \
+# 		$(MF_PROJECT_ROOT)/$$(<D)/*.proto
+
 $(foreach i, $(PROTO_CONNECT_FILES), $(eval $(call connect_go_target,$i,$(dir $(patsubst %/,%,$(dir $i)))$(notdir $(i:.connect.go=.proto)))))
 
 tools:: $(CONNECT_PROTOC_COMMAND) $(GRPCURL_COMMAND) $(BUF_COMMAND)
